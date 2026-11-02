@@ -105,19 +105,19 @@ export function JourneysSection() {
       className="relative z-0 -mt-16 scroll-mt-16 bg-[#FDFBF2]"
     >
       <div className="mx-auto max-w-7xl px-4 pt-0 sm:px-6 md:px-0 lg:pt-2">
-        <FadeIn>
-          <div className="mx-auto max-w-4xl text-center">
-            <TextReveal
-              as="h2"
-              text="Journeys to look forward to"
-              className="font-heading text-[28px] leading-[1.1] font-semibold tracking-tight text-black sm:text-4xl lg:leading-tight"
-            />
-            <p className="mt-0 text-base leading-relaxed text-[#5d5d5d] sm:text-xl">
-              There should always be another place worth discovering. Choose
-              yours.
-            </p>
-          </div>
-        </FadeIn>
+        {/* <FadeIn> */}
+        <div className="mx-auto max-w-4xl text-center">
+          <TextReveal
+            as="h2"
+            text="Journeys to look forward to"
+            className="font-heading text-[28px] leading-[1.1] font-semibold tracking-tight text-black sm:text-4xl lg:leading-tight"
+          />
+          <p className="mt-0 text-base leading-relaxed text-[#5d5d5d] sm:text-xl">
+            There should always be another place worth discovering. Choose
+            yours.
+          </p>
+        </div>
+        {/* </FadeIn> */}
       </div>
 
       <div className="relative isolate w-full">

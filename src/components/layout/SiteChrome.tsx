@@ -64,7 +64,7 @@ export function SiteChrome({ children }: { children: ReactNode }) {
       {isLp ? <LPHeader /> : <Header />}
       <main className="flex-1">{children}</main>
       {isLp ? <LPFooter /> : <Footer />}
-      {!isLp && <FloatingCallButton />}
+      <FloatingCallButton />
     </FloatingCallProvider>
   );
 }

@@ -145,7 +145,6 @@ export default async function LandingPage({ params }: Props) {
           sectionData={destination.cta}
           ctaPage={`lp-${slug}`}
           notifyDestination={destination.notifyDestination}
-          showWhatsApp={false}
           hrefTxt={`Hi, I'd like to know more about the ${
             destination.notifyDestination === "Puri & Bhubaneswar"
               ? "Puri"
