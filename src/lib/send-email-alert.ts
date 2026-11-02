@@ -1,4 +1,5 @@
 export type EmailAlertPayload = {
+  to?: string | string[];
   subject: string;
   text: string;
   html?: string;
@@ -29,11 +30,25 @@ export function formatSubmissionTimestamp(date = new Date()): string {
   return `${day}/${month}/${year} ${hour}:${minute} ${dayPeriod}`;
 }
 
+/**
+ * Generates a unique lead ID (e.g. "SL-8K9P2X").
+ * Uses characters that avoid visual ambiguity (no 0/O or 1/I).
+ */
+export function generateLeadId(prefix = "SL"): string {
+  const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  let randomPart = "";
+  for (let i = 0; i < 6; i++) {
+    randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `${prefix}-${randomPart}`;
+}
+
 export async function sendEmailAlert(payload: EmailAlertPayload): Promise<void> {
   const response = await fetch("/api/send-email-alert", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
+    keepalive: true,
   });
 
   const result = (await response.json().catch(() => ({}))) as {

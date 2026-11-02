@@ -213,13 +213,16 @@ export function formatJourneyTypeForSubmission(journeyType?: JourneyType) {
   );
 }
 
-/** Leads tab — column order must match the sheet. */
+/** Leads tab columns A–AC (fixed order matching sheet). */
 export function formatContactRowForSheet(
-  data: ContactFormData,
+  data: ContactFormData & { leadId?: string },
+  leadId?: string,
   submittedAt = new Date(),
 ) {
+  const finalLeadId = leadId ?? data.leadId ?? "";
   return [
     data.name,
+    finalLeadId,
     data.phone,
     formatWhereToTravelForSheet(data),
     formatWhichDestinationForSheet(data),

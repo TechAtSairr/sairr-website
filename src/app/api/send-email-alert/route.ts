@@ -14,8 +14,12 @@ export async function POST(request: Request) {
     }
 
     const user = process.env.GMAIL_USER?.trim();
-    const pass = process.env.GMAIL_APP_PASSWORD?.trim();
-    const to = process.env.LEAD_ALERT_EMAIL_TO?.trim() || "tech@sairr.in";
+    const rawPass = process.env.GMAIL_APP_PASSWORD?.trim();
+    const pass = rawPass?.replace(/[-\s]/g, "");
+    const to =
+      body.to ||
+      process.env.LEAD_ALERT_EMAIL_TO?.trim() ||
+      "marketing@sairr.in, tanmay@sairr.in";
 
     if (!user || !pass) {
       console.warn(

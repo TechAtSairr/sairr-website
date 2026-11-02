@@ -20,7 +20,11 @@ import {
   type TravelDestination,
 } from "@/lib/validations/contact";
 import { submitToGoogleSheet } from "@/lib/submit-to-sheet";
-import { formatSubmissionTimestamp, sendEmailAlert } from "@/lib/send-email-alert";
+import {
+  formatSubmissionTimestamp,
+  generateLeadId,
+  sendEmailAlert,
+} from "@/lib/send-email-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -57,9 +61,13 @@ function SelectChevron() {
   );
 }
 
-function frameLeadEmail(data: ContactFormData) {
+function frameLeadEmail(
+  data: ContactFormData & { page_url?: string; leadId?: string },
+  leadId?: string,
+) {
   const timestamp = formatSubmissionTimestamp();
-  const subject = "New Lead Received (Sairr Leads)";
+  const finalLeadId = leadId ?? data.leadId ?? generateLeadId();
+  const subject = `New Lead Received (${finalLeadId})`;
 
   const destDisplay =
     data.destination === DESTINATION_SOMEWHERE_ELSE && data.otherDestination
@@ -68,27 +76,34 @@ function frameLeadEmail(data: ContactFormData) {
 
   const text = `${subject}
 
-Timestamp: ${timestamp}
+Date & Time: ${timestamp}
 Name: ${data.name || "-"}
+Lead ID: ${finalLeadId}
 Phone: ${data.phone || "-"}
 Destination: ${destDisplay}
 Journey Type: ${formatJourneyTypeForSubmission(data.journeyType) || "-"}
 Departure City: ${data.departureCity || "-"}
 Preferred Month: ${data.preferredMonth || "-"}
-Message: ${data.message || "-"}`;
+Message: ${data.message || "-"}${data.page_url ? `\nPage URL: ${data.page_url}` : ""}`;
 
   const html = `
     <div style="font-family: Arial, sans-serif; font-size: 14px; color: #1c2a26; max-width: 600px; line-height: 1.6;">
-      <h2 style="color: #ec575e; margin-bottom: 16px;">${subject}</h2>
+      <h2 style="color: #ec575e; margin-bottom: 16px;">New Lead Received (${finalLeadId})</h2>
       <table style="width: 100%; border-collapse: collapse;">
-        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; width: 150px;">Timestamp</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${timestamp}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; width: 150px;">Date & Time</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${timestamp}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Name</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.name || "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Lead ID</td><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; color: #ec575e;">${finalLeadId}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Phone</td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="tel:${data.phone}" style="color: #1c2a26;">${data.phone || "-"}</a></td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Destination</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${destDisplay}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Journey Type</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${formatJourneyTypeForSubmission(data.journeyType) || "-"}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Departure City</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.departureCity || "-"}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Month</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.preferredMonth || "-"}</td></tr>
         <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Message</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.message || "-"}</td></tr>
+        ${
+          data.page_url
+            ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Page URL</td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="${data.page_url}">${data.page_url}</a></td></tr>`
+            : ""
+        }
       </table>
     </div>
   `;
@@ -132,8 +147,10 @@ export function ContactForm({
 
   async function onSubmit(data: ContactFormData) {
     try {
+      const leadId = generateLeadId();
       const payload = {
         ...data,
+        leadId,
         ...getStoredUtmParams(),
         page_url: window.location.href,
         cta_class: ctaClass ?? "",
@@ -141,12 +158,13 @@ export function ContactForm({
 
       await submitToGoogleSheet({
         tabName: "Leads",
-        values: formatContactRowForSheet(payload),
+        columns: "A:AC",
+        values: formatContactRowForSheet(payload, leadId),
       });
 
-      // Sheet API returned 200 OK — send email alert
-      const emailContent = frameLeadEmail(data);
-      await sendEmailAlert(emailContent).catch((err) => {
+      // Sheet API returned 200 OK — send email alert and redirect to /thank-you at the same time
+      const emailContent = frameLeadEmail(payload, leadId);
+      sendEmailAlert(emailContent).catch((err) => {
         console.error("Failed to send lead alert email:", err);
       });
 
