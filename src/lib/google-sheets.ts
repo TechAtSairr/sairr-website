@@ -23,7 +23,7 @@ export function isGoogleSheetsConfigured(): boolean {
   return getCredentials() !== null;
 }
 
-function sheetTabRange(tabName: string, columns = "A:Z") {
+function sheetTabRange(tabName: string, columns = "A:AZ") {
   const quoted = /[\s'!]/.test(tabName) ? `'${tabName.replace(/'/g, "''")}'` : tabName;
   return `${quoted}!${columns}`;
 }

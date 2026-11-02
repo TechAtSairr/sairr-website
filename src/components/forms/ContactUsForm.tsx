@@ -15,6 +15,11 @@ import {
   type ContactUsFormFieldValues,
 } from "@/lib/validations/contact-us";
 import { submitToGoogleSheet } from "@/lib/submit-to-sheet";
+import {
+  formatSubmissionTimestamp,
+  generateLeadId,
+  sendEmailAlert,
+} from "@/lib/send-email-alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -56,6 +61,53 @@ type ContactUsFormProps = {
   appearance?: "default" | "teal";
 };
 
+function frameContactUsEmail(
+  data: ContactUsFormData & { page_url?: string; leadId?: string },
+  leadId?: string,
+) {
+  const timestamp = formatSubmissionTimestamp();
+  const finalLeadId = leadId ?? data.leadId ?? generateLeadId("CU");
+  const subject = `New Contact Inquiry (${finalLeadId})`;
+
+  const text = `${subject}
+
+Date & Time: ${timestamp}
+Name: ${data.name || "-"}
+Lead ID: ${finalLeadId}
+Phone: ${data.phone || "-"}
+Email: ${data.email || "-"}
+Topic: ${data.topic || "-"}
+Number of Travellers: ${data.numberOfTravellers != null ? data.numberOfTravellers : "-"}
+Preferred Date: ${data.preferredDate || "-"}
+How Did You Hear: ${data.howDidYouHear || "-"}
+Message: ${data.message || "-"}${data.page_url ? `\nPage URL: ${data.page_url}` : ""}`;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; font-size: 14px; color: #1c2a26; max-width: 600px; line-height: 1.6;">
+      <h2 style="color: #1f3a34; margin-bottom: 16px;">${subject}</h2>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; width: 170px;">Date & Time</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${timestamp}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Name</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.name || "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Lead ID</td><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold; color: #0E5E6F;">${finalLeadId}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Phone</td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="tel:${data.phone}" style="color: #1c2a26;">${data.phone || "-"}</a></td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Email</td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="mailto:${data.email}">${data.email || "-"}</a></td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Topic</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.topic || "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Number of Travellers</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.numberOfTravellers != null ? data.numberOfTravellers : "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Preferred Date</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.preferredDate || "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">How Did You Hear</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.howDidYouHear || "-"}</td></tr>
+        <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Message</td><td style="padding: 8px; border-bottom: 1px solid #eee;">${data.message || "-"}</td></tr>
+        ${
+          data.page_url
+            ? `<tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Page URL</td><td style="padding: 8px; border-bottom: 1px solid #eee;"><a href="${data.page_url}">${data.page_url}</a></td></tr>`
+            : ""
+        }
+      </table>
+    </div>
+  `;
+
+  return { subject, text, html };
+}
+
 export function ContactUsForm({
   onSubmitted,
   prefill,
@@ -96,16 +148,24 @@ export function ContactUsForm({
 
   async function onSubmit(data: ContactUsFormData) {
     try {
+      const leadId = generateLeadId("CU");
       const payload = {
         ...data,
+        leadId,
         ...getStoredUtmParams(),
         page_url: window.location.href,
       };
 
       await submitToGoogleSheet({
         tabName: "ContactUs",
-        columns: "A:J",
-        values: formatContactUsRowForSheet(payload),
+        columns: "A:K",
+        values: formatContactUsRowForSheet(payload, leadId),
+      });
+
+      // Sheet API returned 200 OK — send email alert and redirect to /thank-you at the same time
+      const emailContent = frameContactUsEmail(payload, leadId);
+      sendEmailAlert(emailContent).catch((err) => {
+        console.error("Failed to send contact inquiry alert email:", err);
       });
 
       onSubmitted?.();

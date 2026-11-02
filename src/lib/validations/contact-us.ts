@@ -117,13 +117,16 @@ export function buildContactUsFormDefaults(): ContactUsFormFieldValues {
   };
 }
 
-/** ContactUs tab columns A–J (fixed order). */
+/** ContactUs tab columns A–K (fixed order matching sheet). */
 export function formatContactUsRowForSheet(
-  data: ContactUsFormData,
+  data: ContactUsFormData & { leadId?: string },
+  leadId?: string,
   submittedAt = new Date(),
 ) {
+  const finalLeadId = leadId ?? data.leadId ?? "";
   return [
     data.name,
+    finalLeadId,
     data.phone,
     data.email ?? "",
     data.topic,
