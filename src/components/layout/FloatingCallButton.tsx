@@ -25,8 +25,7 @@ export function FloatingCallButton() {
       rel="noopener noreferrer"
       aria-label="Chat on WhatsApp"
       className={cn(
-        "fixed right-5 z-50 rounded-full shadow-lg sm:right-8 sm:bottom-8",
-        onDestinationDetail ? "bottom-16" : "bottom-8",
+        "fixed right-5 z-50 rounded-full shadow-lg sm:right-8 sm:bottom-8 bottom-16",
       )}
     >
       <Image

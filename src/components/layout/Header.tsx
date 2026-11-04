@@ -61,9 +61,17 @@ export function Header() {
     [pathname, router],
   );
 
+  const isHomePage = pathname === "/";
   const [heroBannerInView, setHeroBannerInView] = useState(false);
 
   useEffect(() => {
+    if (!isHomePage) {
+      const frame = requestAnimationFrame(() => {
+        setHeroBannerInView(false);
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+
     const heroes = document.querySelectorAll("[data-header-hero]");
 
     if (heroes.length === 0) {
@@ -82,17 +90,19 @@ export function Header() {
 
     heroes.forEach((hero) => observer.observe(hero));
     return () => observer.disconnect();
-  }, [pathname]);
+  }, [isHomePage]);
 
-  const homeHeaderOverHero = heroBannerInView;
+  const homeHeaderOverHero = isHomePage && heroBannerInView;
 
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 w-full border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300",
-        homeHeaderOverHero
-          ? "border-white/30 bg-white/15 shadow-[0_4px_24px_rgba(27,29,31,0.06)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/10"
-          : "border-charcoal/8 bg-white/45 shadow-[0_2px_16px_rgba(27,29,31,0.04)] backdrop-blur-lg backdrop-saturate-125 supports-[backdrop-filter]:bg-white/35",
+        isHomePage
+          ? homeHeaderOverHero
+            ? "border-white/30 bg-white/15 shadow-[0_4px_24px_rgba(27,29,31,0.06)] backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-white/10"
+            : "border-charcoal/8 bg-white/45 shadow-[0_2px_16px_rgba(27,29,31,0.04)] backdrop-blur-lg backdrop-saturate-125 supports-[backdrop-filter]:bg-white/35"
+          : "border-charcoal/8 bg-white/90 shadow-[0_2px_16px_rgba(27,29,31,0.04)] backdrop-blur-lg backdrop-saturate-125 supports-[backdrop-filter]:bg-white/85",
       )}
     >
       <div className="mx-auto flex h-12 sm:h-16 max-w-7xl items-center justify-between pl-5 pr-6 sm:px-6 lg:px-8">
@@ -118,9 +128,9 @@ export function Header() {
             const className = cn(
               "relative inline-block text-sm font-medium transition-colors md:text-lg text-[#1b1d1f] hover:text-brand hover:font-bold",
               isActive &&
-                (homeHeaderOverHero
-                  ? "font-bold text-[#0E5E6F]"
-                  : "font-bold text-brand"),
+              (homeHeaderOverHero
+                ? "font-bold text-[#0E5E6F]"
+                : "font-bold text-brand"),
             );
             const content = (
               <>

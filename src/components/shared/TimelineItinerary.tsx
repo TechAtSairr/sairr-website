@@ -202,13 +202,13 @@ export function TimelineItinerary({
                         />
                       </div>
 
-                      <span className="absolute top-0 right-0 flex size-8 items-center justify-center text-gold">
+                      <span className="absolute top-0 right-0 flex size-8 items-center justify-center text-[#ec575e]">
                         <ChevronDown
-                          className="size-4 group-aria-expanded/accordion-trigger:hidden"
+                          className="size-5 md:size-6 group-aria-expanded/accordion-trigger:hidden"
                           aria-hidden
                         />
                         <ChevronUp
-                          className="hidden size-4 group-aria-expanded/accordion-trigger:block"
+                          className="hidden size-5 md:size-6 group-aria-expanded/accordion-trigger:block"
                           aria-hidden
                         />
                       </span>
