@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Send, ChevronDown } from "lucide-react";
@@ -118,6 +118,7 @@ export function ContactForm({
   onSubmitted,
 }: ContactFormProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const preferredMonths = useMemo(() => getPreferredMonthOptions(), []);
 
   const defaultValues = useMemo(
@@ -169,7 +170,12 @@ export function ContactForm({
       });
 
       onSubmitted?.();
-      router.push("/thank-you");
+      const isLp = pathname.startsWith("/lp");
+      const baseLpPath = pathname
+        .replace(/\/thank-you\/?$/, "")
+        .replace(/\/+$/, "");
+      const thankYouUrl = isLp ? `${baseLpPath}/thank-you` : "/thank-you";
+      router.push(thankYouUrl);
     } catch (error) {
       toast.error("Something went wrong", {
         description:
