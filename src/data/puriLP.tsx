@@ -118,58 +118,6 @@ export function departureToExperienceDateFields(range: DepartureDateRange): {
 
 export const puriDepartures: Departure[] = [
   {
-    id: "nov-2026-1",
-    dates: {
-      start: { day: "19", month: "Nov", year: "26" },
-      end: { day: "22", month: "Nov", year: "26" },
-    },
-    price: 55000,
-    seatsAvailable: "12–20 travellers",
-    status: "live",
-    origin: "Delhi/NCR",
-    duration: "3N/4D",
-    note: "BOOK EARLY",
-  },
-  {
-    id: "nov-2026-2",
-    dates: {
-      start: { day: "26", month: "Nov", year: "26" },
-      end: { day: "29", month: "Nov", year: "26" },
-    },
-    price: 55000,
-    seatsAvailable: "12–20 travellers",
-    status: "live",
-    origin: "Delhi/NCR",
-    duration: "3N/4D",
-    note: "BOOK EARLY",
-  },
-  {
-    id: "dec-2026",
-    dates: {
-      start: { day: "3", month: "Dec", year: "26" },
-      end: { day: "6", month: "Dec", year: "26" },
-    },
-    price: 55000,
-    seatsAvailable: "12–20 travellers",
-    status: "live",
-    origin: "Delhi/NCR",
-    duration: "3N/4D",
-    note: "BOOK EARLY",
-  },
-  {
-    id: "dec-2026-1",
-    dates: {
-      start: { day: "10", month: "Dec", year: "26" },
-      end: { day: "13", month: "Dec", year: "26" },
-    },
-    price: 55000,
-    seatsAvailable: "12–20 travellers",
-    status: "live",
-    origin: "Delhi/NCR",
-    duration: "3N/4D",
-    note: "BEST WEATHER",
-  },
-  {
     id: "dec-2026-2",
     dates: {
       start: { day: "17", month: "Dec", year: "26" },
@@ -180,10 +128,10 @@ export const puriDepartures: Departure[] = [
     status: "live",
     origin: "Delhi/NCR",
     duration: "3N/4D",
-    note: "BEST WEATHER",
+    note: "BOOK EARLY",
   },
   {
-    id: "jan-2026",
+    id: "jan-2027",
     dates: {
       start: { day: "7", month: "Jan", year: "27" },
       end: { day: "10", month: "Jan", year: "27" },
@@ -193,8 +141,60 @@ export const puriDepartures: Departure[] = [
     status: "live",
     origin: "Delhi/NCR",
     duration: "3N/4D",
+    note: "BOOK EARLY",
+  },
+  {
+    id: "jan-2027-1",
+    dates: {
+      start: { day: "21", month: "Jan", year: "27" },
+      end: { day: "24", month: "Jan", year: "27" },
+    },
+    price: 55000,
+    seatsAvailable: "12–20 travellers",
+    status: "live",
+    origin: "Delhi/NCR",
+    duration: "3N/4D",
+    note: "BOOK EARLY",
+  },
+  {
+    id: "feb-2027-1",
+    dates: {
+      start: { day: "3", month: "Feb", year: "27" },
+      end: { day: "6", month: "Feb", year: "27" },
+    },
+    price: 55000,
+    seatsAvailable: "12–20 travellers",
+    status: "live",
+    origin: "Delhi/NCR",
+    duration: "3N/4D",
     note: "BEST WEATHER",
   },
+  {
+    id: "feb-2027-2",
+    dates: {
+      start: { day: "18", month: "Feb", year: "27" },
+      end: { day: "21", month: "Feb", year: "27" },
+    },
+    price: 55000,
+    seatsAvailable: "12–20 travellers",
+    status: "live",
+    origin: "Delhi/NCR",
+    duration: "3N/4D",
+    note: "BEST WEATHER",
+  },
+  {
+    id: "mar-2027-1",
+    dates: {
+      start: { day: "4", month: "Mar", year: "27" },
+      end: { day: "7", month: "Mar", year: "27" },
+    },
+    price: 55000,
+    seatsAvailable: "12–20 travellers",
+    status: "live",
+    origin: "Delhi/NCR",
+    duration: "3N/4D",
+    note: "BEST WEATHER",
+  }
 ];
 
 export function formatInr(amount: number) {
