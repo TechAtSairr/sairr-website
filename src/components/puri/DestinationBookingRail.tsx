@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useContactFormDialog } from "@/components/forms/ContactFormDialogProvider";
 import type { DateCardData } from "@/components/shared/ExperienceDatesSection";
 import type { DepartureDateRange } from "@/data/puri";
+import type { PricingTier } from "@/data/destinationPages";
 import type { TravelDestination } from "@/lib/validations/contact";
 import { ctaClass } from "@/lib/cta";
 import { scrollToSectionId, stripHashFromUrl } from "@/lib/section-nav";
@@ -43,6 +44,7 @@ export type DestinationBookingRailProps = {
   duration: string;
   groupSize: string;
   priceLabel: string;
+  pricingTiers?: PricingTier[];
   pricingNotes?: string[];
   cards: DateCardData[];
   notifyDestination: TravelDestination;
@@ -55,6 +57,7 @@ export function DestinationBookingRail({
   duration,
   groupSize,
   priceLabel,
+  pricingTiers,
   pricingNotes = [],
   cards,
   notifyDestination,
@@ -97,62 +100,134 @@ export function DestinationBookingRail({
           </p>
         </div>
 
-        <div className="mt-3 flex items-end justify-between gap-3">
-          <p className="text-[9.51px]">
-            Starting from
-            <span className="block text-[20.3px] font-bold text-[#0E5E6F]">
-              {priceLabel}
-              <span className="text-[10px] font-normal">/person</span>
-            </span>
-          </p>
-          <button
-            type="button"
-            onClick={() =>
-              openContactForm({
-                destination: notifyDestination,
-                intent: "interest",
-                ctaClass: railInterestedCta,
-              })
-            }
-            className={cn(
-              railInterestedCta,
-              "inline-flex h-10 cursor-pointer items-center justify-center rounded bg-[#EC575E] px-8 text-sm font-semibold text-white transition-colors hover:bg-[#D04A52]",
-            )}
-          >
-            I&apos;m Interested
-          </button>
-        </div>
+        {pricingTiers && pricingTiers.length > 0 ? (
+          <div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {pricingTiers.map((tier) => (
+                <div
+                  key={tier.id}
+                  className="rounded-xl border border-charcoal/10 bg-white p-3 shadow-sm text-left flex flex-col justify-between"
+                >
+                  <div>
+                    <p className="text-xs font-semibold text-black">
+                      {tier.title}
+                    </p>
+                    <p className="mt-1 text-[10px] text-[#767676]">
+                      Starting from
+                    </p>
+                    <p className="mt-0.5 text-[19px] font-bold leading-tight text-[#0E5E6F]">
+                      {tier.priceLabel}
+                      <span className="text-[10px] font-normal text-[#0E5E6F]">/person</span>
+                    </p>
+                  </div>
+                  <p className="mt-2 text-[10px] leading-snug text-[#767676]">
+                    {tier.subtitle}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-        <div className={`mt-4 text-[10px] text-black flex flex-row gap-4 sm:gap-8 bg-[#F9F6F6] py-2 -mx-5 px-5`}>
-          <div>• Based on Delhi/NCR as origin</div>
-          <div>• Reserve your spot @ ₹0</div>
-        </div>
-
-        {pricingNotes.length > 0 ? (
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={() => setNotesOpen((open) => !open)}
-              className="flex w-full items-center justify-between text-left text-xs font-medium text-charcoal"
-              aria-expanded={notesOpen}
-            >
-              Check Pricing notes
-              <ChevronDown
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => setNotesOpen((open) => !open)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal cursor-pointer hover:text-charcoal/80 transition-colors"
+                aria-expanded={notesOpen}
+              >
+                <span>Check Pricing notes</span>
+                <ChevronDown
+                  className={cn(
+                    "size-4 shrink-0 text-[#EC575E] transition-transform duration-200",
+                    notesOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  openContactForm({
+                    destination: notifyDestination,
+                    intent: "interest",
+                    ctaClass: railInterestedCta,
+                  })
+                }
                 className={cn(
-                  "size-4 shrink-0 transition-transform",
-                  notesOpen && "rotate-180",
+                  railInterestedCta,
+                  "inline-flex h-10 cursor-pointer items-center justify-center rounded-lg bg-[#EC575E] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#D04A52]",
                 )}
-              />
-            </button>
-            {notesOpen ? (
-              <ul className="mt-3 list-disc space-y-1 pl-5 text-[10px] leading-relaxed text-[#5d5d5d]">
+              >
+                I&apos;m Interested
+              </button>
+            </div>
+
+            {notesOpen && pricingNotes.length > 0 ? (
+              <ul className="mt-4 list-disc space-y-1.5 pl-4 text-[11px] leading-relaxed text-[#555]">
                 {pricingNotes.map((note) => (
                   <li key={note}>{note}</li>
                 ))}
               </ul>
             ) : null}
           </div>
-        ) : null}
+        ) : (
+          <>
+            <div className="mt-3 flex items-end justify-between gap-3">
+              <p className="text-[9.51px]">
+                Starting from
+                <span className="block text-[20.3px] font-bold text-[#0E5E6F]">
+                  {priceLabel}
+                  <span className="text-[10px] font-normal">/person</span>
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={() =>
+                  openContactForm({
+                    destination: notifyDestination,
+                    intent: "interest",
+                    ctaClass: railInterestedCta,
+                  })
+                }
+                className={cn(
+                  railInterestedCta,
+                  "inline-flex h-10 cursor-pointer items-center justify-center rounded bg-[#EC575E] px-8 text-sm font-semibold text-white transition-colors hover:bg-[#D04A52]",
+                )}
+              >
+                I&apos;m Interested
+              </button>
+            </div>
+
+            <div className={`mt-4 text-[10px] text-black flex flex-row gap-4 sm:gap-8 bg-[#F9F6F6] py-2 -mx-5 px-5`}>
+              <div>• Based on Delhi/NCR as origin</div>
+              <div>• Reserve your spot @ ₹0</div>
+            </div>
+
+            {pricingNotes.length > 0 ? (
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={() => setNotesOpen((open) => !open)}
+                  className="flex w-full items-center justify-between text-left text-xs font-medium text-charcoal"
+                  aria-expanded={notesOpen}
+                >
+                  Check Pricing notes
+                  <ChevronDown
+                    className={cn(
+                      "size-4 shrink-0 transition-transform",
+                      notesOpen && "rotate-180",
+                    )}
+                  />
+                </button>
+                {notesOpen ? (
+                  <ul className="mt-3 list-disc space-y-1 pl-5 text-[10px] leading-relaxed text-[#5d5d5d]">
+                    {pricingNotes.map((note) => (
+                      <li key={note}>{note}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            ) : null}
+          </>
+        )}
       </article>
 
       {cards.length > 0 ? (

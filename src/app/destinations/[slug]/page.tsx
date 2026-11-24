@@ -75,6 +75,7 @@ export default async function DestinationPage({ params }: Props) {
       duration={destination.hero.duration}
       groupSize={destination.hero.groupSize}
       priceLabel={destination.stickyPriceLabel}
+      pricingTiers={destination.pricingTiers}
       pricingNotes={destination.dates.pricingNotes}
       cards={destination.dates.cardsData}
       notifyDestination={destination.notifyDestination}
