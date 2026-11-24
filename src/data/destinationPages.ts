@@ -10,6 +10,15 @@ import type { PuriMomentCard } from "@/data/puri";
 import type { IncludedExcludedItem } from "@/components/puri/PuriIncluded";
 import { puriPage } from "@/data/puri";
 
+export type PricingTier = {
+  id: "with-flight" | "without-flight";
+  title: string;
+  subtitle: string;
+  price: number;
+  priceLabel: string;
+  note: string;
+};
+
 export type DestinationPageContent = {
   slug: string;
   title: string;
@@ -17,6 +26,7 @@ export type DestinationPageContent = {
   jsonLdName: string;
   offerPrice: string;
   stickyPriceLabel: string;
+  pricingTiers?: PricingTier[];
   notifyDestination: TravelDestination;
   hero: ExperienceHeroSectionData;
   moments: {

@@ -6,7 +6,7 @@ import type { PuriDatesProps } from "@/components/puri/PuriDates";
 import type { PuriWordsProps } from "@/components/puri/PuriWords";
 import type { PuriFaqsProps } from "@/components/puri/PuriFaqs";
 import type { ExperienceCtaSectionData } from "@/components/puri/PuriCta";
-import type { DestinationPageContent } from "@/data/destinationPages";
+import type { DestinationPageContent, PricingTier } from "@/data/destinationPages";
 import type { Faq } from "@/data/faqs";
 import { puriGalleryImages } from "@/data/gallery";
 
@@ -216,6 +216,25 @@ export function getLowestLivePrice() {
 
 export const lowestLivePriceLabel = formatInr(getLowestLivePrice());
 
+export const PURI_PRICING_TIERS: PricingTier[] = [
+  {
+    id: "without-flight",
+    title: "Without Flights",
+    subtitle: "Bhubaneswar airport pickup to drop-off",
+    price: 35000,
+    priceLabel: "₹35,000",
+    note: "• Bhubaneswar airport pickup to drop-off",
+  },
+  {
+    id: "with-flight",
+    title: "With Flights",
+    subtitle: "Door-to-door. Fares based on Delhi/NCR",
+    price: 57500,
+    priceLabel: "₹57,500",
+    note: "• Door-to-door. Fares based on Delhi/NCR",
+  },
+];
+
 /* -------------------------------------------------------------------------- */
 /* Hero Section Data                                                          */
 /* -------------------------------------------------------------------------- */
@@ -234,7 +253,7 @@ export const puriCopy = {
 
 export const puriHeroSectionData: ExperienceHeroSectionData = {
   heading: "Jagannath Puri & Bhubaneswar",
-  summaryTitle: "Puri & Bhubaneswar",
+  summaryTitle: "Bhubaneswar & Puri",
   duration: "4 days · 3 nights",
   groupSize: "10–15 travellers",
   tagline: "Thoughtfully designed for travel after 50",
@@ -612,7 +631,7 @@ export const puriIncluded = [
   {
     id: "flights",
     icon: "plane" as const,
-    text: "Return flights from your origin city to Bhubaneswar, with meals included",
+    text: "Return flights from your origin city to Bhubaneswar, with meals included (Flight package only)",
   },
   {
     id: "stay",
@@ -650,7 +669,7 @@ export const puriNotIncluded =
   `Personal shopping and tips · Room service / in-room dining · Temple offerings and donations · Alcohol and mini-bar · Any activities or services not mentioned in "What's included"`;
 
 export const puriPricingNotes = [
-  "Price based on double occupancy",
+  "Price per person, based on double occupancy",
   "Price based on flight fares from Delhi/NCR",
   "Prices for other origin cities may vary with flight fares",
   "Prices across dates may vary by season",
@@ -894,8 +913,9 @@ export const puriPage: DestinationPageContent = {
   title: `${puriCopy.heroTitle} — ${puriCopy.heroTagline}`,
   description: puriCopy.seoDescription,
   jsonLdName: "Bhubaneswar & Jagannath Puri",
-  offerPrice: String(getLowestLivePrice()),
-  stickyPriceLabel: lowestLivePriceLabel,
+  offerPrice: "35000",
+  stickyPriceLabel: "₹35,000",
+  pricingTiers: PURI_PRICING_TIERS,
   notifyDestination: "Puri & Bhubaneswar",
   hero: puriHeroSectionData,
   moments: puriMomentsSectionData,
