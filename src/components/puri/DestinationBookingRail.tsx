@@ -109,18 +109,18 @@ export function DestinationBookingRail({
                   className="rounded-xl border border-charcoal/10 bg-white p-3 shadow-sm text-left flex flex-col justify-between"
                 >
                   <div>
-                    <p className="text-xs font-semibold text-black">
+                    <p className="text-[10.8px] font-semibold text-black">
                       {tier.title}
                     </p>
-                    <p className="mt-1 text-[10px] text-[#767676]">
+                    <p className="mt-1.5 text-[8.1px] text-[#767676]">
                       Starting from
                     </p>
-                    <p className="mt-0.5 text-[19px] font-bold leading-tight text-[#0E5E6F]">
+                    <p className="text-[19px] font-bold leading-tight text-[#0E5E6F]">
                       {tier.priceLabel}
                       <span className="text-[10px] font-normal text-[#0E5E6F]">/person</span>
                     </p>
                   </div>
-                  <p className="mt-2 text-[10px] leading-snug text-[#767676]">
+                  <p className="mt-1.5 text-[8.1px] leading-snug text-[#767676]">
                     {tier.subtitle}
                   </p>
                 </div>
@@ -134,7 +134,7 @@ export function DestinationBookingRail({
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal cursor-pointer hover:text-charcoal/80 transition-colors"
                 aria-expanded={notesOpen}
               >
-                <span>Check Pricing notes</span>
+                <span>Check pricing notes</span>
                 <ChevronDown
                   className={cn(
                     "size-4 shrink-0 text-[#EC575E] transition-transform duration-200",
@@ -173,9 +173,9 @@ export function DestinationBookingRail({
             <div className="mt-3 flex items-end justify-between gap-3">
               <p className="text-[9.51px]">
                 Starting from
-                <span className="block text-[20.3px] font-bold text-[#0E5E6F]">
+                <span className="block text-[18.27px] font-bold text-[#0E5E6F]">
                   {priceLabel}
-                  <span className="text-[10px] font-normal">/person</span>
+                  <span className="text-[9px] font-normal">/person</span>
                 </span>
               </p>
               <button
@@ -209,7 +209,7 @@ export function DestinationBookingRail({
                   className="flex w-full items-center justify-between text-left text-xs font-medium text-charcoal"
                   aria-expanded={notesOpen}
                 >
-                  Check Pricing notes
+                  Check pricing notes
                   <ChevronDown
                     className={cn(
                       "size-4 shrink-0 transition-transform",

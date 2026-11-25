@@ -92,6 +92,14 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Sairr.in",
+  alternateName: ["Sairr", "sairr.in"],
+  url: siteConfig.url,
+};
+
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
@@ -120,6 +128,7 @@ export default function RootLayout({
       <GoogleTagManager gtmId="GTM-PC7XMGZ8" />
       <body className="flex min-h-full flex-col font-sans overflow-x-clip">
         <ContactFormDialogProvider>
+          <JsonLd data={websiteJsonLd} />
           <JsonLd data={organizationJsonLd} />
           <Suspense fallback={null}>
             <UtmCapture />
