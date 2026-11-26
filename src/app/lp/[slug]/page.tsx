@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: Props) {
     title: destination.title,
     description: destination.description,
     path: `/lp/${slug}`,
+    noIndex: true,
   });
 }
 
