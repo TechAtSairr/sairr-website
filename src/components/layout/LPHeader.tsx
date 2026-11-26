@@ -10,13 +10,11 @@ export function LPHeader() {
   const pathname = usePathname();
   const { openContactForm } = useContactFormDialog();
 
-  const isThankYou = pathname.endsWith("/thank-you");
-  const slug = pathname.replace(/^\/lp\/?/, "").split("/")[0];
-  const lpHomeHref = slug ? `/lp/${slug}` : "/";
+  const isThankYou = pathname === "/lp/thank-you";
 
   const handleOpenForm = () => {
-    // Extract slug from /lp/[slug]
-    const lp = slug ? getLandingPage(slug) : undefined;
+    const slug = pathname.replace(/^\/lp\/?/, "").split("/")[0];
+    const lp = getLandingPage(slug);
 
     openContactForm({
       destination: lp?.notifyDestination,
@@ -28,7 +26,7 @@ export function LPHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 w-full border-b border-charcoal/8 bg-white/70 shadow-[0_2px_16px_rgba(27,29,31,0.04)] backdrop-blur-lg backdrop-saturate-125 supports-[backdrop-filter]:bg-white/60">
       <div className="mx-auto flex h-14 sm:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href={isThankYou ? lpHomeHref : "/"} className="flex items-center">
+        <Link href="/" className="flex items-center">
           <Image
             src="/sairr-logo.webp"
             alt="Sairr"

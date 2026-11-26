@@ -1,40 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { FadeIn } from "@/components/shared/FadeIn";
 import { SocialFollow } from "@/components/shared/SocialFollow";
 import { phoneHref, whatsappHref } from "@/data/site";
-import { getLandingPage, getLandingPageParams } from "@/data/landingPages";
 import { createMetadata } from "@/lib/seo";
 
 const TEAL = "#0E5E6F";
 
-type Props = { params: Promise<{ slug: string }> };
+export const metadata = createMetadata({
+  title: "Thank You — Sairr",
+  description:
+    "Thank you for reaching out to Sairr. Our travel experts will be in touch with you soon.",
+  path: "/lp/thank-you",
+  noIndex: true,
+});
 
-export function generateStaticParams() {
-  return getLandingPageParams();
-}
-
-export async function generateMetadata({ params }: Props) {
-  const { slug } = await params;
-  const destination = getLandingPage(slug);
-  if (!destination) return {};
-
-  return createMetadata({
-    title: "Thank You — Sairr",
-    description:
-      "Thank you for reaching out to Sairr. Our travel experts will be in touch with you soon.",
-    path: `/lp/${slug}/thank-you`,
-    noIndex: true,
-  });
-}
-
-export default async function LandingPageThankYou({ params }: Props) {
-  const { slug } = await params;
-  const destination = getLandingPage(slug);
-  if (!destination) notFound();
-
+export default function LandingPageThankYou() {
   return (
     <main className="bg-[#FDFBF2]">
       <section
@@ -53,7 +35,7 @@ export default async function LandingPageThankYou({ params }: Props) {
 
         <div className="relative z-10 w-full px-4 pt-4 sm:px-6 sm:pt-6">
           <Link
-            href={`/lp/${slug}`}
+            href="/"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
           >
             <ArrowLeft className="size-4" aria-hidden />
@@ -63,9 +45,7 @@ export default async function LandingPageThankYou({ params }: Props) {
       </section>
 
       <div className="relative z-10 mx-3 md:mx-auto max-w-6xl pb-6 lg:pb-12">
-        <div
-          className="-mt-20 overflow-hidden rounded-lg bg-white shadow-[0_20px_50px_rgba(0,0,0,0.08)] sm:-mt-24 lg:-mt-44"
-        >
+        <div className="-mt-20 overflow-hidden rounded-lg bg-white shadow-[0_20px_50px_rgba(0,0,0,0.08)] sm:-mt-24 lg:-mt-44">
           <div className="flex flex-col lg:grid lg:grid-cols-2 lg:items-stretch">
             <div
               className="flex flex-col px-6 sm:px-10 py-6 lg:min-h-[20rem] lg:h-full rounded-b-lg sm:rounded-r-lg"
@@ -95,9 +75,11 @@ export default async function LandingPageThankYou({ params }: Props) {
                   <div className="rounded-lg border-[0.5px] md:border-[1px] border-[#C8A867] p-2 md:p-4 backdrop-blur-[2px]">
                     <p className="text-[10px] sm:text-xs md:text-[13px] leading-relaxed text-white">
                       Our team is available from{" "}
-                      <span className="font-semibold text-white">10 AM to 8 PM, Monday to Sunday. </span>
-                      If you reach us outside these hours,
-                      we&apos;ll reply when we&apos;re back.
+                      <span className="font-semibold text-white">
+                        10 AM to 8 PM, Monday to Sunday.{" "}
+                      </span>
+                      If you reach us outside these hours, we&apos;ll reply when
+                      we&apos;re back.
                     </p>
                   </div>
                 </div>
@@ -131,7 +113,7 @@ export default async function LandingPageThankYou({ params }: Props) {
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-[2.6rem] md:h-[3.2rem] items-center justify-center gap-2 rounded-[4px] border border-[#0E5E6F]/15 bg-white  px-4 md:px-6 text-xs md:text-sm font-semibold text-[#1a1a1a] transition-colors hover:bg-white/80 min-w-[9rem] sm:min-w-[11rem]"
+                    className="inline-flex h-[2.6rem] md:h-[3.2rem] items-center justify-center gap-2 rounded-[4px] border border-[#0E5E6F]/15 bg-white px-4 md:px-6 text-xs md:text-sm font-semibold text-[#1a1a1a] transition-colors hover:bg-white/80 min-w-[9rem] sm:min-w-[11rem]"
                   >
                     <Image
                       src="/whatsapp-icon.svg"
@@ -173,4 +155,3 @@ export default async function LandingPageThankYou({ params }: Props) {
     </main>
   );
 }
-

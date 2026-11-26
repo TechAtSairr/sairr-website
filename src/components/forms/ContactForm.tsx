@@ -171,10 +171,7 @@ export function ContactForm({
 
       onSubmitted?.();
       const isLp = pathname.startsWith("/lp");
-      const baseLpPath = pathname
-        .replace(/\/thank-you\/?$/, "")
-        .replace(/\/+$/, "");
-      const thankYouUrl = isLp ? `${baseLpPath}/thank-you` : "/thank-you";
+      const thankYouUrl = isLp ? "/lp/thank-you" : "/thank-you";
       router.push(thankYouUrl);
     } catch (error) {
       toast.error("Something went wrong", {
